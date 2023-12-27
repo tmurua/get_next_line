@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurua <tmurua@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: tom <tmurua@student.42berlin.de>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 20:10:05 by tmurua            #+#    #+#             */
-/*   Updated: 2023/12/15 20:16:56 by tmurua           ###   ########.fr       */
+/*   Updated: 2023/12/27 15:35:00 by tom              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,13 @@
 # endif
 
 /* Helper functions */
-size_t	ft_strlen(char *string);
-char	ft_strchr(char *string, int search_char);
-char	ft_strjoin(char *s1, char *s2);
+char	*ft_strdup(const char *s1);
+char	*ft_strjoin(const char *s1, const char *s2);
+char	*ft_strchr(const char *s, int c);
+char	*ft_substr(const char *s, unsigned int start, size_t len);
+size_t	ft_strlen(const char *str);
 
-/* Main functions */
-char	*ft_read(int fd, char *tmp_save);
+/* Main function */
 char	*get_next_line(int fd);
-char	*ft_getline(char *read);
-char	*ft_free_buffer(char *buffer);
 
 #endif
