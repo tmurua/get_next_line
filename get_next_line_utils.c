@@ -6,7 +6,7 @@
 /*   By: tom <tmurua@student.42berlin.de>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 20:39:26 by tmurua            #+#    #+#             */
-/*   Updated: 2023/12/27 17:06:38 by tom              ###   ########.fr       */
+/*   Updated: 2024/01/02 18:19:00 by tom              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_strdup(const char *s1)
 	return (dest);
 }
 
-/* Join the buffer read to left_c */
+/* Join buffer being read to left_c from previous loop in read_concatenate */
 char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*join;
@@ -63,7 +63,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	return (join);
 }
 
-/* Search for \n in the buffer we read */
+/* If \n is found in current buffer, line was read, finish read_concatenate */
 char	*ft_strchr(const char *s, int c)
 {
 	unsigned int	i;
@@ -82,7 +82,7 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-/* Take a substring from the end of the line, that's what's left from it */
+/* Set value of left_c to substring after \n to be used next get_next_line */
 char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	size_t	i;
@@ -107,7 +107,7 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	return (str);
 }
 
-/* Read the number of characters in the string */
+/* Read the number of chars in current line to use ft_substr */
 size_t	ft_strlen(const char *str)
 {
 	size_t	len;

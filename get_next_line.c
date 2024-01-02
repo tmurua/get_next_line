@@ -6,7 +6,7 @@
 /*   By: tom <tmurua@student.42berlin.de>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 20:17:52 by tmurua            #+#    #+#             */
-/*   Updated: 2023/12/27 22:01:48 by tom              ###   ########.fr       */
+/*   Updated: 2024/01/02 18:23:50 by tom              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,32 @@
 static char	*read_concatenate_line(int fd, char *left_c, char *buffer);
 static char	*set_leftover_chars(char *current_line);
 
-/* Get the next line from the file descriptor (fd)
-* left_c are leftover chars from previous call
-* Allocates mem for buffer, checks invalid fd, buffer size or read error
-* Checks for buffer allocation failure
-* Reads line from fd and concatenate with any leftover chars
-* Update left_c with remaining chars after \n for the next call
-* Returns the concatenated line, including any left_c */
+/*char		*get_next_line(int fd);
+#include <stdio.h>
+
+int	main(void)
+{
+	int			fd;
+	char	*line;
+
+	fd = open("41_with_nl", O_RDONLY);
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
+		printf("%s", line);
+		line = get_next_line(fd);
+	}
+	close(fd);
+}
+*/
+/* left_c: remaining chars from previous call (static char)
+buffer: temp storage for chars being read now in the fd
+allocate mem for buffer, check invalid fd, buffer size or read error
+check buffer allocation failure,
+current_line: concatenate buffer with left_c from previous call
+Update left_c with remaining chars after /n for the next call
+Return the concatenated line, including any left_c
+ */
 char	*get_next_line(int fd)
 {
 	static char	*left_c;
@@ -48,14 +67,16 @@ char	*get_next_line(int fd)
 	return (current_line);
 }
 
-/* Read the current line from the fd and concatenate it with any left_c
-* Initialize bytes_read to 1 to enter the loop
-* Read chars from fd into buffer and assign to bytes_read
-* free left_c in case of error, if nothing is read break out of the loop
-* Null-terminate the buffer, to treat it as str  and check if left_c is empty
-* Concatenate the current buffer with left_c
-* Check if a \n is present in the buffer, exiting the loop if yes
-* Return the concatenated string */
+/* Initialize bytes_read to 1 to enter the loop for 1st time
+read chars from fd into buffer and assign number of bytes read to bytes_read
+when doing so, it also changes value of str buffer with content from file
+free left_c in case of error, if nothing is read break out of the loop
+buffer[bytes_read]: buffer[last char of str buffer] = 0 to null terminate str
+left_c wasn’t initialize in first loop, so assign empty str to it
+join str tmp (clone of left_c atm) with str buffer. 1st time: left_c=buffer
+search for \n in buffer, if \n not found on buffer, restart loop
+if found break loop and return left_c, i.e. current_line = left_c
+*/
 static char	*read_concatenate_line(int fd, char *left_c, char *buffer)
 {
 	ssize_t	bytes_read;
@@ -85,13 +106,13 @@ static char	*read_concatenate_line(int fd, char *left_c, char *buffer)
 	return (left_c);
 }
 
-/* Set left_c by extracting remaining chars after a \n in the line
-* Find the position of \n or the end of the str, \0
-* Check for an empty line or end of file after the \n
-* Set left_c to the substring after the \n
-* Check if left_c is empty, if so free left_c
-* Null-terminate current_line after \n
-* Return remaining substring (left_c) after the \n */
+/* Increment current_line until \n or end of str found, i = this position
+Check for empty line or end of file after the \n, if so return NULL
+Set left_c to substring after the \n to use next time we use get_next_line
+Check if left_c is empty, if so free left_c
+Null-terminate current_line after \n, it’ll be the final return in get_next_line
+Return remaining substring (left_c) after the \n assigning it to left_c in get_n_l
+*/
 static char	*set_leftover_chars(char *current_line)
 {
 	ssize_t	i;
